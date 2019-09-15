@@ -152,7 +152,7 @@ class Matriks{
     }
 
     public Matriks transpose(){
-        Matriks T = new Matriks(this.NeffBar, this.NeffKol);
+        Matriks T = new Matriks(this.NeffKol, this.NeffBar);
         for (int i = 1; i <= this.NeffBar; i++){
             for (int j = 1; j <= this.NeffKol; j++){
                 T.angka[j][i] = this.angka[i][j];       
