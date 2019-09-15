@@ -61,6 +61,7 @@ class Matriks{
 			this.angka[a][i] = this.angka[b][i];
 			this.angka[b][i] = temp;
 		}
+		// DEBUG: NANTI DIBUANG AJA
 		System.out.println("R" + a + " <-> R" + b);
 	}
 
@@ -70,6 +71,7 @@ class Matriks{
 		for(int i=1; i<=this.NeffKol; i++){
 			this.angka[a][i] *= k;
 		}
+		// DEBUG: NANTI DIBUANG AJA
 		System.out.println("R" + a + " <- R" + a + "*" + k);
 	}
 
@@ -79,12 +81,7 @@ class Matriks{
 		for(int i=1; i<=this.NeffKol; i++){
 			this.angka[a][i] += k*this.angka[b][i];
 		}
-
+		// DEBUG: NANTI DIBUANG AJA
 		System.out.println("R" + a + " <- R" + a + " + R" + b + "*" + k);
 	}
 }
-
-
-// 5 -3 1 14
-// 3 2 -4 3
-// 2 3 3 15
