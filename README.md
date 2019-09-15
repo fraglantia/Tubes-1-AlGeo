@@ -1,5 +1,5 @@
 # Tubes-1-AlGeo
-Tubes 1 AlGeo MATRIKS
+Tubes 1 AlGeo MATRIKS pake bahasa **DJAVAA**.
 
 ### How to Use?
 Compile the `.java` files w/ `javac *.java` then run `java DriverMatriks`.  
