@@ -64,9 +64,9 @@ class Matriks{
 	void OBEScale(int a, float k){
 		// pekalian baris dengan k != 0
 
-		for(int i=1; i<=this.NeffKol; i++){
-            if (this.angka[a][i] != 0) {
-        		this.angka[a][i] *= k;
+        for(int i=1; i<=this.NeffKol; i++){
+            if(this.angka[a][i] != 0) {
+                this.angka[a][i] *= k;
             }
 		}
 		// DEBUG: NANTI DIBUANG AJA
@@ -84,6 +84,37 @@ class Matriks{
 		// DEBUG: NANTI DIBUANG AJA
 		//System.out.println("R" + a + " <- R" + a + " + R" + b + "*" + k);
 	}
+
+    void KaliKons(float k){
+        for (int i = 1; i <= this.NeffBar; i++) {
+            for (int j = 1; j <= this.NeffKol; j++) {
+                this.angka[i][j] *= k;
+            }
+        }
+    }
+
+    public Matriks KaliMat(Matriks M1){
+        // perkalian matriks dengan M1
+        // PREKONDISI UKURAN this.NeffKol = M1.NeffBar
+        int tmp;
+
+        Matriks M = new Matriks();
+        M.NeffBar = this.NeffBar;
+        M.NeffKol = M1.NeffKol;
+
+        for(int i=1; i<=M.NeffBar; i++){
+            for(int j=1; j<=M.NeffKol; j++){
+                // 1 1 = 
+                tmp = 0;
+                for(int k=1; k<=this.NeffKol; k++){
+                    tmp += this.angka[i][k] * M1.angka[k][j];
+                }
+                M.angka[i][j] = tmp;
+            }
+        }
+
+        return M;
+    }
 
     void CopyMatriks(Matriks M) {
         // meng-copy matriks ke matriks M
@@ -109,6 +140,7 @@ class Matriks{
 
     void unAugmented(Matriks M, int KSize) {
         // memecahkan matriks augmentasi ke bentuk awalnya masing-masing
+        // [A|B] -> [A], M -> [B], KSize = ukuran B
         this.NeffKol -= KSize;
         M.NeffKol = KSize;
         for (int i = 1; i <= this.NeffBar; i++) {
@@ -196,6 +228,7 @@ class Matriks{
     int CountPivot(int B, int K) {
         // menghitung jumlah pivot point
         // matriks sudah berbentuk echelon
+        // 
         boolean found;
         int count = 0;
         for (int i = B; i >= 1; i--) {
@@ -212,7 +245,7 @@ class Matriks{
         return count;
     }
 
-    float Determinan() {
+    float DeterminanOBE() {
         // menghitung determinan matriks
         // prekondisi: matriks square
         float temp_d = 1;
@@ -225,23 +258,26 @@ class Matriks{
         return temp_d;
     }
 
-    void Inverse(boolean Invertible) {
+    boolean IsInvertible(){
+        return this.DeterminanOBE() != 0;
+    }
+
+    void InverseOBE() {
         // menngubah matriks ke bentuk inversenya
+        // prekondisi matriks invertible
         Matriks temp = new Matriks();
         this.CopyMatriks(temp);
         temp.Augmented(temp.MatriksIdentitas());
         temp.toReducedEchelon();
-        if (temp.CountPivot(this.NeffBar, this.NeffKol) == temp.NeffBar) {
-            temp.unAugmented(this,this.NeffKol);
-            Invertible = true;
-        } else {
-            Invertible = false;
-        }
+        temp.unAugmented(this,this.NeffKol);
     }
 
-/*
-	public Matriks minorMatriks(int idxRow, int idxCol){
-        Matriks holder = new Matriks(this.NeffBar-1, this.NeffKol-1);
+
+	Matriks MinorMatriks(int idxRow, int idxCol){
+        Matriks holder = new Matriks();
+        holder.NeffBar = this.NeffBar-1;
+        holder.NeffKol = this.NeffKol-1;
+
         for (int i = 1; i <= holder.NeffBar; i++){
             for (int j = 1; j <= holder.NeffKol; j++){
                 if(i >= idxRow){
@@ -261,29 +297,41 @@ class Matriks{
         }
         return holder;
     }
-	public float determinan(){
+
+
+	float DeterminanKofaktor(){
         float sum = 0f;
         int multiplier;
-        Matriks holder = new Matriks(this.NeffBar-1, this.NeffKol-1);
-        if(this.NeffBar == 2){ // BASIS saat 2x2
-            return this.angka[1][1] * this.angka[2][2] - this.angka[1][2] * this.angka[2][1];
-        } else {
+        Matriks holder = new Matriks();
+        holder.NeffBar = this.NeffBar-1;
+        holder.NeffKol = this.NeffKol-1;
+        // if(this.NeffBar == 2){ // BASIS saat 2x2
+        //     return this.angka[1][1] * this.angka[2][2] - this.angka[1][2] * this.angka[2][1];
+        // }
+        if(this.NeffBar == 1){ // BASIS saat 2x2
+            return this.angka[1][1];
+        }
+        else {
             for (int i = 1; i <= this.NeffBar; i++){
-                holder = this.minorMatriks(i, 1);
+                holder = this.MinorMatriks(i, 1);
                 if ((i + 1) % 2 == 0){ 
                     multiplier = 1;
                 } else {
                     multiplier = -1;
                 }
-                sum += this.angka[i][1] * multiplier * holder.determinan(); //RECC
+                sum += this.angka[i][1] * multiplier * holder.DeterminanKofaktor(); //RECC
             }
         }
         return sum;
     }
 
-	public Matriks kofaktor(){
+    
+	Matriks Kofaktor(){
         int multiplier;
-        Matriks MatriksKofaktor = new Matriks(this.NeffBar, this.NeffKol);
+        Matriks MatriksKofaktor = new Matriks();
+        MatriksKofaktor.NeffBar = this.NeffBar;
+        MatriksKofaktor.NeffKol = this.NeffKol;
+
         for (int i = 1; i <= this.NeffBar; i++){
             for (int j = 1; j <= this.NeffKol; j++){    
                 if((i + j) % 2 == 0){
@@ -292,8 +340,8 @@ class Matriks{
                     multiplier = -1;
                 }
                 
-                if(this.minorMatriks(i, j).determinan() != 0){
-                     MatriksKofaktor.angka[i][j] = multiplier * this.minorMatriks(i, j).determinan();
+                if(this.MinorMatriks(i, j).DeterminanKofaktor() != 0){
+                     MatriksKofaktor.angka[i][j] = multiplier * this.MinorMatriks(i, j).DeterminanKofaktor();
                 } else {
                     MatriksKofaktor.angka[i][j] = 0;
                 }
@@ -303,8 +351,11 @@ class Matriks{
         return MatriksKofaktor;
     }
 
-    public Matriks transpose(){
-        Matriks T = new Matriks(this.NeffKol, this.NeffBar);
+
+    Matriks Transpose(){
+        Matriks T = new Matriks();
+        T.NeffKol = this.NeffKol;
+        T.NeffBar = this.NeffBar;
         for (int i = 1; i <= this.NeffBar; i++){
             for (int j = 1; j <= this.NeffKol; j++){
                 T.angka[j][i] = this.angka[i][j];       
@@ -313,8 +364,18 @@ class Matriks{
         return T;
     }
 
-    public Matriks adjoin(){
-        return this.kofaktor().transpose();
+    Matriks Adjoin(){
+        return this.Kofaktor().Transpose();
     }
-    */
+
+    Matriks InverseAdjoin(){
+        Matriks temp = new Matriks();
+        this.CopyMatriks(temp);
+        temp = temp.Adjoin();
+        temp.KaliKons(1/this.DeterminanKofaktor());
+        return temp;
+    }
+
 }
+
+
