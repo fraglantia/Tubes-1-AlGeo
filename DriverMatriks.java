@@ -3,6 +3,10 @@ class DriverMatriks{
 		Matriks M = new Matriks();
 		M.InputDataMat();
 		M.OutputDataMat();
+		M.Inverse();
+		M.OutputDataMat();
+		M.toReducedEchelon();
+		M.OutputDataMat();
 		M.OBESwap(1, 2);
 		M.OutputDataMat();
 		M.OBEScale(1, 10);

@@ -10,12 +10,6 @@ class Matriks{
 	// BERBENTUK AUGMENTED MATRIKS
 
 	// Metode
-	Matriks(int rowEff, int colEff){
-		this.NeffBar = rowEff;
-        this.NeffKol = colEff;
-        angka = new float[rowEff+1][colEff+1];
-	}
-
 	void InputDataMat(){
 		Scanner in = new Scanner(System.in);
 		System.out.println("INPUT MATRIKS:");
@@ -71,7 +65,9 @@ class Matriks{
 		// pekalian baris dengan k != 0
 
 		for(int i=1; i<=this.NeffKol; i++){
-			this.angka[a][i] *= k;
+            if (this.angka[a][i] != 0) {
+        		this.angka[a][i] *= k;
+            }
 		}
 		// DEBUG: NANTI DIBUANG AJA
 		System.out.println("R" + a + " <- R" + a + "*" + k);
@@ -81,12 +77,168 @@ class Matriks{
 		// elemen baris ke-a ditambah k * elemen baris ke-b
 
 		for(int i=1; i<=this.NeffKol; i++){
-			this.angka[a][i] += k*this.angka[b][i];
+            if (this.angka[b][i] != 0) {
+	    		this.angka[a][i] += k*this.angka[b][i];
+            }
 		}
 		// DEBUG: NANTI DIBUANG AJA
 		System.out.println("R" + a + " <- R" + a + " + R" + b + "*" + k);
 	}
 
+    void CopyMatriks(Matriks M) {
+        // meng-copy matriks ke matriks M
+        M.NeffBar = this.NeffBar;
+        M.NeffKol = this.NeffKol;
+        for (int i = 1; i <= this.NeffBar; i++) {
+            for (int j = 1; j <= this.NeffKol; j++) {
+                M.angka[i][j] = this.angka[i][j];
+            }
+        }
+    }
+
+    void Augmented(Matriks M) {
+        // membentuk bentuk augmented matriks dengan matriks M
+        // prekondisi: this.NeffKol + M.NeffKol <= 100
+        for (int i = 1; i <= this.NeffBar; i++) {
+            for (int j = this.NeffKol+1; j <= this.NeffKol+M.NeffKol; j++) {
+                this.angka[i][j] = M.angka[i][j-this.NeffKol];
+            }
+        }
+        this.NeffKol += M.NeffKol;
+    }
+
+    void unAugmented(Matriks M, int KSize) {
+        // memecahkan matriks augmentasi ke bentuk awalnya masing-masing
+        this.NeffKol -= KSize;
+        M.NeffKol = KSize;
+        for (int i = 1; i <= this.NeffBar; i++) {
+            for (int j = this.NeffKol+1; j <= this.NeffKol+KSize; j++) {
+                M.angka[i][j-this.NeffKol] = this.angka[i][j];
+            }
+        }
+    }
+
+    Matriks MatriksIdentitas() {
+        // mengirimkan matriks identitas dari matriks
+        // prekondisi: matriks square
+        Matriks M = new Matriks();
+        M.NeffKol = this.NeffKol;
+        M.NeffBar = this.NeffBar;
+        for (int i = 1; i <= this.NeffBar; i++) {
+            M.angka[i][i] = 1;
+        }
+        return M;
+    }
+
+    void toSegitigaAtas() {
+        // mengubah matriks menjadi bentuk matriks segitiga atas
+        boolean found;
+        int k = 1;
+        for (int i = 1; i < this.NeffBar; i++) {
+            found = false;
+            int j = i;
+            while (!found && k <= this.NeffKol) {
+                found = (this.angka[j][k] != 0);
+                j++;
+                if (!found && j > this.NeffBar) { k++; j = i; }
+            }
+            if (found && k <= this.NeffKol) {
+                j--;
+                this.OBESwap(i,j);
+                for (j = i+1; j <= this.NeffBar; j++) {
+                    if (this.angka[j][k] != 0) {
+                        OBEReplace(j,i,-this.angka[j][k]/this.angka[i][k]);
+                    }
+                }
+                k++;
+            }
+        }
+    }
+
+    void toEchelon() {
+        // mengubah matriks menjadi bentuk echelon
+        boolean found;
+        this.toSegitigaAtas();
+        for (int i = 1; i <= this.NeffBar; i++) {
+            found = false;
+            int j = 1;
+            while (!found && j <= this.NeffKol) {
+                found = (this.angka[i][j] != 0);
+                j++;
+            }
+            if (found && this.angka[i][j-1] != 1) {
+                j--;
+                OBEScale(i,1/this.angka[i][j]);
+            }
+        }
+    }
+
+    void toReducedEchelon() {
+        // mengubah matriks menjadi bentuk reduced echelon
+        boolean found;
+        this.toEchelon();
+        for (int i = this.NeffBar; i >= 1; i--) {
+            found = false;
+            int j = 1;
+            while (!found && j <= this.NeffKol) {
+                found = (this.angka[i][j] != 0);
+                j++;
+            }
+            if (found) {
+                j--;
+                for (int k = i-1; k >= 1; k--) {
+                    OBEReplace(k,i,-this.angka[k][j]/this.angka[i][j]);
+                }
+            }
+        }
+    }
+
+    int CountPivot() {
+        // menghitung jumlah pivot point
+        // matriks sudah berbentuk echelon
+        boolean found;
+        int count = 0;
+        for (int i = this.NeffBar; i >= 1; i--) {
+            found = false;
+            int j = 1;
+            while (!found && j <= this.NeffKol) {
+                found = (this.angka[i][j] != 0);
+                j++;
+            }
+            if (found) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    float Determinan() {
+        // menghitung determinan matriks
+        // prekondisi: matriks square
+        float temp_d = 1;
+        Matriks temp = new Matriks();
+        this.CopyMatriks(temp);
+        temp.toSegitigaAtas();
+        for (int i = 1; i <= this.NeffBar; i++) {
+            temp_d *= temp.angka[i][i];
+        }
+        return temp_d;
+    }
+
+    void Inverse() {
+        // menngubah matriks ke bentuk inversenya
+        Matriks temp = new Matriks();
+        this.CopyMatriks(temp);
+        temp.Augmented(temp.MatriksIdentitas());
+        temp.toReducedEchelon();
+        if (temp.CountPivot() != temp.NeffBar) {
+            System.out.println("Matriks tidak memiliki invers!");
+        } else {
+            temp.unAugmented(this,this.NeffKol);
+        }
+    }
+
+/*
 	public Matriks minorMatriks(int idxRow, int idxCol){
         Matriks holder = new Matriks(this.NeffBar-1, this.NeffKol-1);
         for (int i = 1; i <= holder.NeffBar; i++){
@@ -108,7 +260,6 @@ class Matriks{
         }
         return holder;
     }
-
 	public float determinan(){
         float sum = 0f;
         int multiplier;
@@ -164,4 +315,5 @@ class Matriks{
     public Matriks adjoin(){
         return this.kofaktor().transpose();
     }
+    */
 }
