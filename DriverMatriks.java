@@ -1,10 +1,13 @@
 class DriverMatriks{
 	public static void main(String[] args){
 		Matriks M = new Matriks();
+		boolean bisaDiInvers;
 		M.InputDataMat();
 		M.OutputDataMat();
-		M.Inverse();
-		M.OutputDataMat();
+		M.Inverse(bisaDiInvers);
+		if (bisaDiInvers) {
+			M.OutputDataMat();
+		}
 		M.toReducedEchelon();
 		M.OutputDataMat();
 		M.OBESwap(1, 2);

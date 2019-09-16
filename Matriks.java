@@ -58,7 +58,7 @@ class Matriks{
 			this.angka[b][i] = temp;
 		}
 		// DEBUG: NANTI DIBUANG AJA
-		System.out.println("R" + a + " <-> R" + b);
+		//System.out.println("R" + a + " <-> R" + b);
 	}
 
 	void OBEScale(int a, float k){
@@ -70,7 +70,7 @@ class Matriks{
             }
 		}
 		// DEBUG: NANTI DIBUANG AJA
-		System.out.println("R" + a + " <- R" + a + "*" + k);
+		//System.out.println("R" + a + " <- R" + a + "*" + k);
 	}
 
 	void OBEReplace(int a, int b, float k){
@@ -82,7 +82,7 @@ class Matriks{
             }
 		}
 		// DEBUG: NANTI DIBUANG AJA
-		System.out.println("R" + a + " <- R" + a + " + R" + b + "*" + k);
+		//System.out.println("R" + a + " <- R" + a + " + R" + b + "*" + k);
 	}
 
     void CopyMatriks(Matriks M) {
@@ -193,15 +193,15 @@ class Matriks{
         }
     }
 
-    int CountPivot() {
+    int CountPivot(int B, int K) {
         // menghitung jumlah pivot point
         // matriks sudah berbentuk echelon
         boolean found;
         int count = 0;
-        for (int i = this.NeffBar; i >= 1; i--) {
+        for (int i = B; i >= 1; i--) {
             found = false;
             int j = 1;
-            while (!found && j <= this.NeffKol) {
+            while (!found && j <= K) {
                 found = (this.angka[i][j] != 0);
                 j++;
             }
@@ -225,16 +225,17 @@ class Matriks{
         return temp_d;
     }
 
-    void Inverse() {
+    void Inverse(boolean Invertible) {
         // menngubah matriks ke bentuk inversenya
         Matriks temp = new Matriks();
         this.CopyMatriks(temp);
         temp.Augmented(temp.MatriksIdentitas());
         temp.toReducedEchelon();
-        if (temp.CountPivot() != temp.NeffBar) {
-            System.out.println("Matriks tidak memiliki invers!");
-        } else {
+        if (temp.CountPivot(this.NeffBar, this.NeffKol) == temp.NeffBar) {
             temp.unAugmented(this,this.NeffKol);
+            Invertible = true;
+        } else {
+            Invertible = false;
         }
     }
 
