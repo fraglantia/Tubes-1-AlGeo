@@ -162,10 +162,11 @@ class Matriks{
         return M;
     }
 
-    void toSegitigaAtas() {
+    int toSegitigaAtas() {
         // mengubah matriks menjadi bentuk matriks segitiga atas
         boolean found;
         int k = 1;
+        int cs = 0;
         for (int i = 1; i < this.NeffBar; i++) {
             found = false;
             int j = i;
@@ -176,7 +177,10 @@ class Matriks{
             }
             if (found && k <= this.NeffKol) {
                 j--;
-                this.OBESwap(i,j);
+                if (i != j) {
+                    this.OBESwap(i,j);
+                    cs++;
+                }
                 for (j = i+1; j <= this.NeffBar; j++) {
                     if (this.angka[j][k] != 0) {
                         OBEReplace(j,i,-this.angka[j][k]/this.angka[i][k]);
@@ -185,6 +189,7 @@ class Matriks{
                 k++;
             }
         }
+        return cs;
     }
 
     void toEchelon() {
@@ -251,11 +256,11 @@ class Matriks{
         float temp_d = 1;
         Matriks temp = new Matriks();
         this.CopyMatriks(temp);
-        temp.toSegitigaAtas();
+        int cs = temp.toSegitigaAtas();
         for (int i = 1; i <= this.NeffBar; i++) {
             temp_d *= temp.angka[i][i];
         }
-        return temp_d;
+        return temp_d*(float)Math.pow(-1,cs);
     }
 
     boolean IsInvertible(){

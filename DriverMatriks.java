@@ -9,6 +9,8 @@ class DriverMatriks{
 		// M2.InputDataMat();
 
 		M1.InverseAdjoin().OutputDataMat();
+		System.out.println(M1.DeterminanOBE());
+		System.out.println(M1.DeterminanKofaktor());
 		M1.InverseOBE();
 		M1.OutputDataMat();
 
