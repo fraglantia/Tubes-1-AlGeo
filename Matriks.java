@@ -382,6 +382,23 @@ class Matriks{
         return temp;
     }
 
+    float SolveSPLKramer(int valNum){
+        Matriks b = new Matriks();
+        Matriks numerator = new Matriks();
+        Matriks denom = new Matriks();
+        this.unAugmented(b, 1);
+        this.CopyMatriks(numerator);
+        this.CopyMatriks(denom);
+        this.Augmented(b);
+        for (int i = 1; i <= numerator.NeffBar; i++){
+            numerator.angka[i][valNum] = b.angka[i][1];
+        }
+        return numerator.determinan()/this.determinan();
+    }
+
+    float SolveSPLGJ(int valNum){
+        this.toReducedEchelon();
+        return this.angka[valNum][NeffKol];
+    }
+
 }
-
-
