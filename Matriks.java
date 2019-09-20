@@ -397,8 +397,10 @@ class Matriks{
     }
 
     float SolveSPLGJ(int valNum){
-        this.toReducedEchelon();
-        return this.angka[valNum][NeffKol];
+        Matriks holder = new Matriks();
+        this.CopyMatriks(holder);
+        holder.toReducedEchelon();
+        return holder.angka[valNum][NeffKol];
     }
 
 }
