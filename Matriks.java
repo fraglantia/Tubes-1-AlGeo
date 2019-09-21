@@ -233,6 +233,7 @@ class Matriks{
         // [A|B] -> [A], M -> [B], KSize = ukuran B
         this.NeffKol -= KSize;
         M.NeffKol = KSize;
+        M.NeffBar = this.NeffBar;
         for (int i = 1; i <= this.NeffBar; i++) {
             for (int j = this.NeffKol+1; j <= this.NeffKol+KSize; j++) {
                 M.angka[i][j-this.NeffKol] = this.angka[i][j];
