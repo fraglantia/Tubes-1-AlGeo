@@ -396,11 +396,51 @@ class Matriks{
         return numerator.determinan()/this.determinan();
     }
 
-    float SolveSPLGJ(int valNum){
+    float SolveSPLgJordan(int valNum){
         Matriks holder = new Matriks();
         this.CopyMatriks(holder);
         holder.toReducedEchelon();
-        return holder.angka[valNum][NeffKol];
+        return holder.angka[valNum][holder.NeffKol];
+    }
+
+    float SolveSPLgauss(int valNum){
+        Matriks holder = new Matriks();
+        float sum = 0;
+        this.CopyMatriks(holder);
+        holder.toEchelon();
+        int start = holder.NeffKol-1;
+
+        while (start <= 0 && holder.angka[start][start] != 1){
+            start--;
+        }
+
+        float[] arrayVal = new float[holder.NeffKol-1];
+        arrayVal[start] = holder.angka[start][start];
+
+        for (int i = start-1; i > 0; i--){
+            if (holder.angka[start][start] == 1){
+                for (int j = i+1; j < holder.NeffKol; j++){
+                    sum += arrayVal[j]*holder.angka[i][j];
+                }
+                arrayVal[i] = holder.angka[i][this.NeffKol] - sum;
+            } else {
+                arrayVal[i] = -99999; //mark untuk variabel bebas
+            }
+            sum = 0;
+        }
+        
+        return arrayVal[valNum];
+    }
+
+    float SolveSPLinverse(int valNum){
+        Matriks holder = new Matriks();
+        Matriks b = new Matriks();
+        this.unAugmented(b, 1);
+        this.CopyMatriks(holder);
+        this.Augmented(b);
+        holder.InverseOBE();
+        holder = holder.KaliMat(b);
+        return holder[valNum][this.NeffKol];
     }
 
 }
