@@ -3,18 +3,13 @@ import java.util.*;
 class DriverMatriks{
 	public static void main(String[] args){
 		Matriks M1 = new Matriks();
-		Matriks M2 = new Matriks();
+		// System.out.println("HALO");
+		// Matriks M2 = new Matriks();
 
-		M1.InputDataMat();
-		// M2.InputDataMat();
-
-		M1.InverseAdjoin().OutputDataMat();
-		System.out.println(M1.DeterminanOBE());
-		System.out.println(M1.DeterminanKofaktor());
-		M1.InverseOBE();
-		M1.OutputDataMat();
-
-		// MainMenu();
+		// M1.InputDataMatFile("matrixout.txt");
+		// M1.InputDataMat();
+		// System.out.println);
+		MainMenu(M1);
 	}
 
 	public static void PrintMenu(){
@@ -28,7 +23,7 @@ class DriverMatriks{
 		System.out.println("7. Keluar");
 	}
 
-	public static void MainMenu(){
+	public static void MainMenu(Matriks M){
 		int choice;
 		boolean loop = true;
 
@@ -37,22 +32,23 @@ class DriverMatriks{
 		while(loop){
 			PrintMenu();
 			System.out.print(">> ");
+			M.ClearMatriks();
 
 			choice = in.nextInt();
 			switch(choice){
 				case 1:{
 					// CEK DULU SOLSNYA APAKAB
-					SPLMenu();
+					SPLMenu(M);
 				    break;
 				}
 				case 2:{
 					// CEK KOTAK ATO ENGGA!
-					DETMenu();
+					DETMenu(M);
 				    break;
 				}
 				case 3:{
 					// CEK INVERTIBLE
-					INVMenu();
+					INVMenu(M);
 				    break;
 				}
 				case 4:{
@@ -83,7 +79,7 @@ class DriverMatriks{
 		
 	}
 
-	public static void SPLMenu(){
+	public static void SPLMenu(Matriks M){
 		int choice;
 		boolean loop = true;
 
@@ -113,8 +109,17 @@ class DriverMatriks{
 			    break;
 			}
 			case 4:{
-				// bikin fungsi replace col
-				System.out.println("Cramer");
+				// CRAMER
+				MintaInput(M);
+				System.out.println();
+				if(M.NeffKol != M.NeffBar+1){
+					System.out.println("Matriks tidak valid");			
+				}
+				else{
+					for(int i=1; i<=M.NeffBar; i++){
+						System.out.println("x" + i + " = " + M.SolveSPLKramer(i));
+					}
+				}
 			    break;
 			}
 			default:{
@@ -123,7 +128,7 @@ class DriverMatriks{
 		}
 	}
 
-	public static void DETMenu(){
+	public static void DETMenu(Matriks M){
 		int choice;
 		boolean loop = true;
 
@@ -151,9 +156,8 @@ class DriverMatriks{
 		}
 	}
 
-	public static void INVMenu(){
+	public static void INVMenu(Matriks M){
 		int choice;
-		boolean loop = true;
 
 		Scanner in = new Scanner(System.in);
 		System.out.println("\nMatriks Balikan");
@@ -177,5 +181,34 @@ class DriverMatriks{
 				System.out.println("N/A");
 			}
 		}
+	}
+
+	public static void MintaInput(Matriks M){
+		int choice;
+
+		Scanner in = new Scanner(System.in);
+		String fileName;
+		System.out.println("\nPilih metode input:");
+		System.out.println("1. Input dari Keyboard");
+		System.out.println("2. Input dari File");
+
+		choice = in.nextInt();
+		switch(choice){
+			case 1:{
+				M.InputDataMat();
+			    break;
+			}
+			case 2:{
+				// belom
+				in.nextLine();
+				fileName = in.nextLine();
+				M.InputDataMatFile(fileName);
+			    break;
+			}
+			default:{
+				System.out.println("N/A");
+			}
+		}
+
 	}
 }

@@ -1,4 +1,4 @@
-
+import java.io.*;
 import java.util.*;
 import java.lang.Math; 
 
@@ -39,6 +39,57 @@ class Matriks{
 		}
 	}
 
+    void InputDataMatFile(String fileName){
+        BufferedReader reader;
+
+        Matriks M = new Matriks();
+
+        String baris;
+        String[] barisParsed;
+        int maxKol = -1;
+        boolean sameLength = true;
+
+        try(BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
+            M.NeffBar = 0;
+            baris = bufferedReader.readLine();
+            if(baris != null){
+                barisParsed = baris.split(" ");
+                maxKol = barisParsed.length;
+                M.NeffKol = maxKol;
+            }
+
+            while(baris != null && sameLength) {
+                M.NeffBar += 1;
+                barisParsed = baris.split(" ");
+
+                sameLength = maxKol == barisParsed.length;
+
+                if(sameLength){
+                    for(int j=1; j<=maxKol; j++){
+                        M.angka[M.NeffBar][j] = Float.parseFloat(barisParsed[j-1]);
+                    }
+                }
+                
+                baris = bufferedReader.readLine();
+            }
+
+        }
+        catch (FileNotFoundException e) {
+            System.out.println("file not found");
+        }
+        catch (IOException e) {
+            System.out.println("error");
+        }
+
+        if(sameLength){
+            this.ReverseCopyMatriks(M);
+        }
+        else {
+            System.out.println("Ukuran matriks tidak seragam");
+        }
+        
+    }
+
 	void OutputDataMat(){
 		System.out.println("OUTPUT MATRIKS:");
 		for(int i=1; i<=this.NeffBar; i++){
@@ -48,6 +99,26 @@ class Matriks{
 			System.out.println();
 		}
 	}
+
+    void OutputDataMatFile(String fileName){
+        try(BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName))) {
+            for(int i=1; i<=this.NeffBar; i++){
+                for(int j=1; j<=this.NeffKol; j++){
+                    bufferedWriter.write(String.format("%.2f", this.angka[i][j]));
+                    if(j!=this.NeffKol){
+                        bufferedWriter.write(" ");
+                    }
+                }
+                if(i!=this.NeffBar){
+                    bufferedWriter.write("\n");
+                }
+            }
+            
+        } catch (IOException e) {
+            System.out.println("error");
+        }
+
+    }
 
 	void OBESwap(int a, int b){
 		// swap baris ke a dan b
@@ -127,6 +198,24 @@ class Matriks{
             }
         }
     }
+
+    void ReverseCopyMatriks(Matriks M) {
+        // meng-copy matriks M ke matriks ini
+        this.NeffBar = M.NeffBar;
+        this.NeffKol = M.NeffKol;
+        for (int i = 1; i <= M.NeffBar; i++) {
+            for (int j = 1; j <= M.NeffKol; j++) {
+                this.angka[i][j] = M.angka[i][j];
+            }
+        }
+    }
+
+    void ClearMatriks() {
+        // mengosongkan matriks
+        this.NeffBar = 0;
+        this.NeffKol = 0;
+    }
+
 
     void Augmented(Matriks M) {
         // membentuk bentuk augmented matriks dengan matriks M
@@ -393,7 +482,7 @@ class Matriks{
         for (int i = 1; i <= numerator.NeffBar; i++){
             numerator.angka[i][valNum] = b.angka[i][1];
         }
-        return numerator.determinan()/this.determinan();
+        return numerator.DeterminanOBE()/this.DeterminanOBE();
     }
 
     float SolveSPLgJordan(int valNum){
