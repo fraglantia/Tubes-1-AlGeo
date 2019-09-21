@@ -440,7 +440,7 @@ class Matriks{
         this.Augmented(b);
         holder.InverseOBE();
         holder = holder.KaliMat(b);
-        return holder[valNum][this.NeffKol];
+        return holder.angka[valNum][this.NeffKol];
     }
 
 }
