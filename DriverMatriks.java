@@ -345,6 +345,8 @@ class DriverMatriks{
 				System.out.println("Jumlah titik:");
 				n = in.nextInt();
 				String[] baris;
+				boolean valid;
+				boolean found;
 
 				X.NeffBar = n;
 				X.NeffKol = 1;
@@ -355,11 +357,32 @@ class DriverMatriks{
 
 				for(int i=1; i<=n; i++){
 					baris = in.nextLine().split(" ");
+					valid = false;
 
-					while(baris.length != 2){
-						System.out.println("Mohon masukkan sebagai pasangan x-y!");
-						baris = in.nextLine().split(" ");
+					while(!valid){
+						if(baris.length != 2){
+							System.out.println("Mohon masukkan sebagai pasangan x-y!");
+							baris = in.nextLine().split(" ");
+							continue;
+						}
+
+						found = false;
+						for(int j=1; j<=i; j++){
+							if(X.angka[j][1] == Float.parseFloat(baris[0]) && Y.angka[j][1] != Float.parseFloat(baris[1])){
+								found = true;
+								break;
+							}
+						}
+						if(found){
+							System.out.println("Titik tidak bisa menjadi suatu fungsi!");
+							baris = in.nextLine().split(" ");
+							continue;
+						}
+						valid = true;
 					}
+
+					
+
 					X.angka[i][1] =  Float.parseFloat(baris[0]);
 					Y.angka[i][1] =  Float.parseFloat(baris[1]);
 				}
@@ -367,22 +390,41 @@ class DriverMatriks{
 			}
 			case 2:{
 				in.nextLine();
+				boolean valid = false;
+				boolean found;
 
-				do {
-					System.out.println("Nama File:");
-					fileName = in.nextLine();
-					if(!FileCheck(fileName)){
-						System.out.println("File tidak ada.");
+				while(!valid){
+					do {
+						System.out.println("Nama File:");
+						fileName = in.nextLine();
+						if(!FileCheck(fileName)){
+							System.out.println("File tidak ada.");
+						}
+					} while(!FileCheck(fileName));
+					
+					X.InputDataMatFile(fileName);
+					if(X.NeffKol != 2){
+						System.out.println("Mohon masukkan sebagai pasangan x-y!");
+						continue;
 					}
-				} while(!FileCheck(fileName));
-				
-				X.InputDataMatFile(fileName);
-				if(X.NeffKol != 2){
-					System.out.println("Mohon masukkan sebagai pasangan x-y!");
-				}
-				else{
 					X.unAugmented(Y, 1);
+					found = false;
+					for(int i=1; i<=X.NeffBar; i++){
+						for(int j=1; j<i; j++){
+							if(X.angka[i][1] == X.angka[j][1] && Y.angka[i][1] != Y.angka[j][1]){
+								found = true;
+								break;
+							}
+						}
+					}
+					if(found){
+						System.out.println("Titik tidak bisa menjadi suatu fungsi!");
+						continue;
+					}
+					valid = true;
 				}
+				
+				
 			    break;
 			}
 			default:{
@@ -449,13 +491,14 @@ class DriverMatriks{
 		Scanner in = new Scanner(System.in);
 		int n;
 		float taksirX;
-		float taksirY=0;
+		float taksirY;
 		System.out.println("Jumlah nilai X yang mau ditaksir:");
 		n = in.nextInt();
 
 		for(int j=1; j<=n; j++){
 			System.out.print("Masukkan nilai X yang akan ditaksir: ");
 			taksirX = in.nextFloat();
+			taksirY=0;
 			for(int i=1; i<=M.NeffBar; i++){
 				taksirY += Y.angka[i][1] * (float)Math.pow(taksirX, i-1);
 			}
