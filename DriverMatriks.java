@@ -447,14 +447,20 @@ class DriverMatriks{
 
 		// taksir nilai x
 		Scanner in = new Scanner(System.in);
+		int n;
 		float taksirX;
 		float taksirY=0;
-		System.out.print("Masukkan nilai X yang akan ditaksir: ");
-		taksirX = in.nextFloat();
-		for(int i=1; i<=M.NeffBar; i++){
-			taksirY += Y.angka[i][1] * (float)Math.pow(taksirX, i-1);
+		System.out.println("Jumlah nilai X yang mau ditaksir:");
+		n = in.nextInt();
+
+		for(int j=1; j<=n; j++){
+			System.out.print("Masukkan nilai X yang akan ditaksir: ");
+			taksirX = in.nextFloat();
+			for(int i=1; i<=M.NeffBar; i++){
+				taksirY += Y.angka[i][1] * (float)Math.pow(taksirX, i-1);
+			}
+			System.out.println("Taksiran nilai Y: " +  taksirY);
 		}
-		System.out.println("Taksiran nilai Y: " +  taksirY);
 	}
 
 	public static boolean FileCheck(String fileName){
