@@ -497,9 +497,10 @@ class Matriks{
         double sum = 0;
         for (int i = 1; i <= this.NeffBar; i++){
             for (int j = 1; j < this.NeffKol; j++){
-                sum += this.angka[i][j];
+                sum += Math.abs(this.angka[i][j]);
             }
-            if (sum == 0 && this.angka[i][this.NeffKol] != 0){
+            if (sum == 0 && Math.floor(Math.abs(this.angka[i][this.NeffKol]*100)) != 0){
+                System.out.println(this.angka[i][this.NeffKol]);
                 return true;
             }
             sum = 0;
@@ -526,22 +527,27 @@ class Matriks{
         // prekondisi: ada solusi
         int search = 1;
         String solution = "";
+        String simbol;
         double temp;
         this.toReducedEchelon();
         while (search <= this.NeffBar && this.angka[search][valNum] != 1){
             search++;
         }
         if (search <= this.NeffBar) {
-            solution += Double.toString(this.angka[search][this.NeffKol]);
-            for (int i = valNum+1; i < this.NeffKol; i++) {
+            for (int i = this.NeffKol; i > valNum; i--) {
                 temp = this.angka[search][i];
+                simbol = "";
+                if (i != this.NeffKol) {
+                    temp *= -1;
+                    simbol = "s" + Integer.toString(i);
+                }
                 if (temp != 0) {
-                    if (temp > 0) {
-                        solution += " + ";
+                    if (temp > 0 && solution != "") {
+                        solution += "+ ";
                     } else { 
-                        solution += " - "; 
+                        solution += "- "; 
                     }
-                    solution += Double.toString(temp) + "s" + Integer.toString(i);
+                    solution += Double.toString(Math.abs(temp)) + simbol + " ";
                 }
             }
         } else {
