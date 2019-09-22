@@ -6,7 +6,7 @@ import java.lang.Math;
 class Matriks{
 	// Atribut
 	int NeffKol, NeffBar;
-	float[][] angka = new float[100][100];
+	double[][] angka = new double[100][100];
 	// IdxMin = 1
 	// BERBENTUK AUGMENTED MATRIKS
 
@@ -33,7 +33,7 @@ class Matriks{
 			}
 
 			for(int j=1; j<=this.NeffKol; j++){
-				this.angka[i][j] =  Float.parseFloat(baris[j-1]);
+				this.angka[i][j] =  Double.parseDouble(baris[j-1]);
 			}
 
 		}
@@ -66,7 +66,7 @@ class Matriks{
 
                 if(sameLength){
                     for(int j=1; j<=maxKol; j++){
-                        M.angka[M.NeffBar][j] = Float.parseFloat(barisParsed[j-1]);
+                        M.angka[M.NeffBar][j] = Double.parseDouble(barisParsed[j-1]);
                     }
                 }
                 
@@ -128,7 +128,7 @@ class Matriks{
 
 	void OBESwap(int a, int b){
 		// swap baris ke a dan b
-		float temp;
+		double temp;
 
 		for(int i=1; i<=this.NeffKol; i++){
 			temp = this.angka[a][i];
@@ -139,7 +139,7 @@ class Matriks{
 		//System.out.println("R" + a + " <-> R" + b);
 	}
 
-	void OBEScale(int a, float k){
+	void OBEScale(int a, double k){
 		// pekalian baris dengan k != 0
 
         for(int i=1; i<=this.NeffKol; i++){
@@ -151,7 +151,7 @@ class Matriks{
 		//System.out.println("R" + a + " <- R" + a + "*" + k);
 	}
 
-	void OBEReplace(int a, int b, float k){
+	void OBEReplace(int a, int b, double k){
 		// elemen baris ke-a ditambah k * elemen baris ke-b
 
 		for(int i=1; i<=this.NeffKol; i++){
@@ -163,7 +163,7 @@ class Matriks{
 		//System.out.println("R" + a + " <- R" + a + " + R" + b + "*" + k);
 	}
 
-    void KaliKons(float k){
+    void KaliKons(double k){
         for (int i = 1; i <= this.NeffBar; i++) {
             for (int j = 1; j <= this.NeffKol; j++) {
                 this.angka[i][j] *= k;
@@ -297,7 +297,7 @@ class Matriks{
             found = false;
             int j = 1;
             while (!found && j <= this.NeffKol) {
-                found = (this.angka[i][j] != 0);
+                found = (Math.floor(Math.abs(this.angka[i][j]*100)) != 0);
                 j++;
             }
             if (found && this.angka[i][j-1] != 1) {
@@ -315,7 +315,7 @@ class Matriks{
             found = false;
             int j = 1;
             while (!found && j <= this.NeffKol) {
-                found = (this.angka[i][j] != 0);
+                found = (Math.floor(Math.abs(this.angka[i][j]*100)) != 0);
                 j++;
             }
             if (found) {
@@ -347,17 +347,17 @@ class Matriks{
         return count;
     }
 
-    float DeterminanOBE() {
+    double DeterminanOBE() {
         // menghitung determinan matriks
         // prekondisi: matriks square
-        float temp_d = 1;
+        double temp_d = 1;
         Matriks temp = new Matriks();
         this.CopyMatriks(temp);
         int cs = temp.toSegitigaAtas();
         for (int i = 1; i <= this.NeffBar; i++) {
             temp_d *= temp.angka[i][i];
         }
-        return temp_d*(float)Math.pow(-1,cs);
+        return temp_d*(double)Math.pow(-1,cs);
     }
 
     boolean IsInvertible(){
@@ -401,8 +401,8 @@ class Matriks{
     }
 
 
-	float DeterminanKofaktor(){
-        float sum = 0f;
+	double DeterminanKofaktor(){
+        double sum = 0f;
         int multiplier;
         Matriks holder = new Matriks();
         holder.NeffBar = this.NeffBar-1;
@@ -478,7 +478,7 @@ class Matriks{
         return temp;
     }
 
-    float SolveSPLKramer(int valNum){
+    double SolveSPLKramer(int valNum){
         Matriks b = new Matriks();
         Matriks numerator = new Matriks();
         Matriks denom = new Matriks();
@@ -494,7 +494,7 @@ class Matriks{
 
     boolean isNoSol(){
     // Matriks yg dioperasikan harus sudah dalam bentuk reducedEchelon
-        float sum = 0;
+        double sum = 0;
         for (int i = 1; i <= this.NeffBar; i++){
             for (int j = 1; j < this.NeffKol; j++){
                 sum += this.angka[i][j];
@@ -509,7 +509,7 @@ class Matriks{
 
     boolean isFreeVar(int valNum){
     // Matriks yg dioperasikan harus sudah dalam bentuk reducedEchelon
-        float sum = 0;
+        double sum = 0;
         for (int i = 1; i <= this.NeffBar; i++){
             sum += this.angka[i][valNum];
         }
@@ -526,13 +526,13 @@ class Matriks{
         // prekondisi: ada solusi
         int search = 1;
         String solution = "";
-        float temp;
+        double temp;
         this.toReducedEchelon();
         while (search <= this.NeffBar && this.angka[search][valNum] != 1){
             search++;
         }
         if (search <= this.NeffBar) {
-            solution += Float.toString(this.angka[search][this.NeffKol]);
+            solution += Double.toString(this.angka[search][this.NeffKol]);
             for (int i = valNum+1; i < this.NeffKol; i++) {
                 temp = this.angka[search][i];
                 if (temp != 0) {
@@ -541,7 +541,7 @@ class Matriks{
                     } else { 
                         solution += " - "; 
                     }
-                    solution += Float.toString(temp) + "s" + Integer.toString(i);
+                    solution += Double.toString(temp) + "s" + Integer.toString(i);
                 }
             }
         } else {
@@ -552,7 +552,7 @@ class Matriks{
     
     String SolveSPLgauss(int valNum){
         // prekondisi: ada solusi
-        float sum = 0;
+        double sum = 0;
         String[] arrayVal = new String[this.NeffKol];
         int start = this.NeffKol-1;
         int search = 1;
@@ -575,7 +575,7 @@ class Matriks{
                     sum += this.angka[search][j];
                 }
             }
-            arrayVal[i] = Float.toString(this.angka[search][this.NeffKol] - sum);
+            arrayVal[i] = Double.toString(this.angka[search][this.NeffKol] - sum);
             if (testFree.isFreeVar(i)) {
                 arrayVal[i] += "FREE";
             }
@@ -590,7 +590,7 @@ class Matriks{
         return arrayVal[valNum];
     }
 
-    float SolveSPLinverse(int valNum){
+    double SolveSPLinverse(int valNum){
         Matriks hasil = new Matriks();
         Matriks clone = new Matriks();
         this.CopyMatriks(clone);
