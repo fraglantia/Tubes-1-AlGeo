@@ -520,53 +520,72 @@ class Matriks{
         }
     }
 
-    float SolveSPLgJordan(int valNum){
+
+
+    String SolveSPLgJordan(int valNum){
+        // prekondisi: ada solusi
         int search = 1;
-
+        String solution = "";
+        float temp;
         this.toReducedEchelon();
-
-        if(this.isNoSol()){
-            return -99999 + valNum + 64; //jika ditambah 99999, dapat di set ordinal untuk diubah menjadi char nanti
-        } else {
-            while (search <= this.NeffBar && this.angka[search][valNum] != 1){
-                search++;
-            }
-            return this.angka[search][this.NeffKol];
+        while (search <= this.NeffBar && this.angka[search][valNum] != 1){
+            search++;
         }
+        if (search <= this.NeffBar) {
+            solution += Float.toString(this.angka[search][this.NeffKol]);
+            for (int i = valNum+1; i < this.NeffKol; i++) {
+                temp = this.angka[search][i];
+                if (temp != 0) {
+                    if (temp > 0) {
+                        solution += " + ";
+                    } else { 
+                        solution += " - "; 
+                    }
+                    solution += Float.toString(temp) + "s" + Integer.toString(i);
+                }
+            }
+        } else {
+            solution += "s" + Integer.toString(valNum);
+        }
+        return solution;
     }
     
-    float SolveSPLgauss(int valNum){
+    String SolveSPLgauss(int valNum){
+        // prekondisi: ada solusi
         float sum = 0;
-        float[] arrayVal = new float[this.NeffKol];
+        String[] arrayVal = new String[this.NeffKol];
         int start = this.NeffKol-1;
         int search = 1;
         Matriks testFree = new Matriks();
+        String solution = "";
         
         this.CopyMatriks(testFree);
         this.toEchelon();
         testFree.toReducedEchelon();
 
-        arrayVal[this.NeffKol-1] = this.angka[this.NeffBar][this.NeffKol];
+        for (int i = start; i >= valNum; i--){
+            //search index 1 di baris ke berapa
+            while (search <= this.NeffBar && this.angka[search][i] != 1){
+                search++;
+            }
 
-        for (int i = start; i > 0; i--){
-            if (!testFree.isFreeVar(i)){
-                //search index 1 di baris ke berapa
-                while (search <= this.NeffBar && this.angka[search][i] != 1){
-                    search++;
+            //operasikan di baris tersebut
+            for (int j = i+1; j < this.NeffKol; j++){
+                if(!testFree.isFreeVar(j)){
+                    sum += this.angka[search][j];
                 }
-
-                //operasikan di baris tersebut
-                for (int j = i+1; j < this.NeffKol; j++){
-                    if(!testFree.isFreeVar(j)){
-                        sum += this.angka[search][j];
-                    }
-                }
-                arrayVal[i] = this.angka[search][this.NeffKol] - sum;
-            } else {
-                arrayVal[i] = -99999 + this.NeffKol-i+64; //jika ditambah 99999, dapat di set ordinal untuk diubah menjadi char nanti
+            }
+            arrayVal[i] = Float.toString(this.angka[search][this.NeffKol] - sum);
+            if (testFree.isFreeVar(i)) {
+                arrayVal[i] += "FREE";
             }
             sum = 0;
             search = 1;
+        }
+
+        solution += arrayVal[1];
+        for (int i = 1; i <= this.NeffKol-1; i++) {
+            System.out.println(arrayVal[i]);
         }
         return arrayVal[valNum];
     }

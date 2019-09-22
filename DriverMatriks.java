@@ -107,11 +107,11 @@ class DriverMatriks{
 				if(M.isNoSol()){
 					System.out.println("SPL tidak memiliki solusi!");
 					break;
-				}
+				} 
 				else{
 					String hasil = "";
 					for(int i=1; i<M.NeffKol; i++){
-						hasil += ("x" + i + " = " + M.SolveSPLgauss(i));
+						hasil += ("x" + i + " = " + M.SolveSPLgauss(i) + "\n");
 					}
 					MintaOutput(hasil);
 				}
@@ -129,7 +129,7 @@ class DriverMatriks{
 				}
 				else{
 					for(int i=1; i<M.NeffKol; i++){
-						hasil += ("x" + i + " = " + M.SolveSPLgJordan(i));
+						hasil += ("x" + i + " = " + M.SolveSPLgJordan(i) + "\n");
 					}
 					MintaOutput(hasil);
 				}
