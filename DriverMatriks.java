@@ -111,10 +111,24 @@ class DriverMatriks{
 			case 1:{
 				// Kelar + tinggal detect kalo many sols / no sols
 				System.out.println("Gauss");
+				M.toReducedEchelon();
+				if(M.isNoSol()){
+					System.out.println("SPL tidak memiliki solusi!");
+					break;
+				}
+
+				for(int i=1; i<M.NeffKol; i++){
+					System.out.println("x" + i + " = " + M.SolveSPLgauss(i));
+				}
 			    break;
 			}
 			case 2:{
 				// tinggal
+				M.toReducedEchelon();
+				if(M.isNoSol()){
+					System.out.println("SPL tidak memiliki solusi!");
+					break;
+				}
 				System.out.println("Gauss-Jordan");
 			    break;
 			}

@@ -486,39 +486,82 @@ class Matriks{
         return numerator.DeterminanOBE()/this.DeterminanOBE();
     }
 
-    float SolveSPLgJordan(int valNum){
-        Matriks holder = new Matriks();
-        this.CopyMatriks(holder);
-        holder.toReducedEchelon();
-        return holder.angka[valNum][holder.NeffKol];
-    }
-
-    float SolveSPLgauss(int valNum){
-        Matriks holder = new Matriks();
+    boolean isNoSol(){
+    // Matriks yg dioperasikan harus sudah dalam bentuk reducedEchelon
         float sum = 0;
-        this.CopyMatriks(holder);
-        holder.toEchelon();
-        int start = holder.NeffKol-1;
-
-        while (start <= 0 && holder.angka[start][start] != 1){
-            start--;
-        }
-
-        float[] arrayVal = new float[holder.NeffKol-1];
-        arrayVal[start] = holder.angka[start][start];
-
-        for (int i = start-1; i > 0; i--){
-            if (holder.angka[start][start] == 1){
-                for (int j = i+1; j < holder.NeffKol; j++){
-                    sum += arrayVal[j]*holder.angka[i][j];
-                }
-                arrayVal[i] = holder.angka[i][this.NeffKol] - sum;
-            } else {
-                arrayVal[i] = -99999; //mark untuk variabel bebas
+        for (int i = 1; i <= this.NeffBar; i++){
+            for (int j = 1; j < this.NeffKol; j++){
+                sum += this.angka[i][j];
+            }
+            if (sum == 0 && this.angka[i][this.NeffKol] != 0){
+                return true;
             }
             sum = 0;
         }
+        return false;
+    }
+
+    boolean isFreeVar(int valNum){
+    // Matriks yg dioperasikan harus sudah dalam bentuk reducedEchelon
+        float sum = 0;
+        for (int i = 1; i <= this.NeffBar; i++){
+            sum += this.angka[i][valNum];
+        }
+        if (sum != 1){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    float SolveSPLgJordan(int valNum){
+        int search = 1;
+
+        this.toReducedEchelon();
+
+        if(this.isNoSol()){
+            return -99999 + valNum + 64; //jika ditambah 99999, dapat di set ordinal untuk diubah menjadi char nanti
+        } else {
+            while (search <= this.NeffBar && this.angka[search][valNum] != 1){
+                search++;
+            }
+            return this.angka[search][this.NeffKol];
+        }
+    }
+    
+    float SolveSPLgauss(int valNum){
+        float sum = 0;
+        float[] arrayVal = new float[this.NeffKol];
+        int start = this.NeffKol-1;
+        int search = 1;
+        Matriks testFree = new Matriks();
         
+        this.CopyMatriks(testFree);
+        this.toEchelon();
+        testFree.toReducedEchelon();
+
+        arrayVal[this.NeffKol-1] = this.angka[this.NeffBar][this.NeffKol];
+
+        for (int i = start; i > 0; i--){
+            if (!testFree.isFreeVar(i)){
+                //search index 1 di baris ke berapa
+                while (search <= this.NeffBar && this.angka[search][i] != 1){
+                    search++;
+                }
+
+                //operasikan di baris tersebut
+                for (int j = i+1; j < this.NeffKol; j++){
+                    if(!testFree.isFreeVar(j)){
+                        sum += this.angka[search][j];
+                    }
+                }
+                arrayVal[i] = this.angka[search][this.NeffKol] - sum;
+            } else {
+                arrayVal[i] = -99999 + this.NeffKol-i+64; //jika ditambah 99999, dapat di set ordinal untuk diubah menjadi char nanti
+            }
+            sum = 0;
+            search = 1;
+        }
         return arrayVal[valNum];
     }
 
