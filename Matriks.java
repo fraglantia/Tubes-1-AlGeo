@@ -90,35 +90,41 @@ class Matriks{
         
     }
 
-	void OutputDataMat(){
-		System.out.println("OUTPUT MATRIKS:");
+	String OutputDataMat(){
+        String hasil = "";
 		for(int i=1; i<=this.NeffBar; i++){
-			for(int j=1; j<=this.NeffKol; j++){
-				System.out.printf("%.2f\t", this.angka[i][j]);
-			}
-			System.out.println();
-		}
-	}
-
-    void OutputDataMatFile(String fileName){
-        try(BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName))) {
-            for(int i=1; i<=this.NeffBar; i++){
-                for(int j=1; j<=this.NeffKol; j++){
-                    bufferedWriter.write(String.format("%.2f", this.angka[i][j]));
-                    if(j!=this.NeffKol){
-                        bufferedWriter.write(" ");
-                    }
-                }
-                if(i!=this.NeffBar){
-                    bufferedWriter.write("\n");
+            for(int j=1; j<=this.NeffKol; j++){
+                hasil += String.format("%.2f", this.angka[i][j]);
+                if(j!=this.NeffKol){
+                    hasil += " ";
                 }
             }
-            
-        } catch (IOException e) {
-            System.out.println("error");
+            if(i!=this.NeffBar){
+                hasil += "\n";
+            }
         }
+        return hasil;
+	}
 
-    }
+    // void OutputDataMatFile(String fileName){
+    //     try(BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName))) {
+    //         for(int i=1; i<=this.NeffBar; i++){
+    //             for(int j=1; j<=this.NeffKol; j++){
+    //                 bufferedWriter.write(String.format("%.2f", this.angka[i][j]));
+    //                 if(j!=this.NeffKol){
+    //                     bufferedWriter.write(" ");
+    //                 }
+    //             }
+    //             if(i!=this.NeffBar){
+    //                 bufferedWriter.write("\n");
+    //             }
+    //         }
+            
+    //     } catch (IOException e) {
+    //         System.out.println("error");
+    //     }
+
+    // }
 
 	void OBESwap(int a, int b){
 		// swap baris ke a dan b
@@ -566,14 +572,12 @@ class Matriks{
     }
 
     float SolveSPLinverse(int valNum){
-        Matriks holder = new Matriks();
-        Matriks b = new Matriks();
-        this.unAugmented(b, 1);
-        this.CopyMatriks(holder);
-        this.Augmented(b);
-        holder.InverseOBE();
-        holder = holder.KaliMat(b);
-        return holder.angka[valNum][this.NeffKol];
+        Matriks hasil = new Matriks();
+        Matriks clone = new Matriks();
+        this.CopyMatriks(clone);
+        clone.unAugmented(hasil, 1);
+        hasil = hasil.KaliMat(clone.InverseAdjoin());
+        return hasil.angka[valNum][1];
     }
 
 }

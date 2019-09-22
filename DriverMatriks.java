@@ -1,15 +1,10 @@
 import java.util.*;
 import java.lang.Math; 
+import java.io.*;
 
 class DriverMatriks{
 	public static void main(String[] args){
 		Matriks M1 = new Matriks();
-		// System.out.println("HALO");
-		// Matriks M2 = new Matriks();
-
-		// M1.InputDataMatFile("matrixout.txt");
-		// M1.InputDataMat();
-		// System.out.println);
 		MainMenu(M1);
 	}
 
@@ -57,8 +52,7 @@ class DriverMatriks{
 						System.out.println("Matriks harus Square!");
 					}
 					else{
-						System.out.println("Kofaktornya");
-						M.Kofaktor().OutputDataMat();
+						MintaOutput(M.Kofaktor().OutputDataMat());
 					}
 				    break;
 				}
@@ -69,8 +63,7 @@ class DriverMatriks{
 						System.out.println("Matriks harus Square!");
 					}
 					else{
-						System.out.println("Adjoinnya");
-						M.Adjoin().OutputDataMat();
+						MintaOutput(M.Adjoin().OutputDataMat());
 					}
 				    break;
 				}
@@ -110,26 +103,36 @@ class DriverMatriks{
 		switch(choice){
 			case 1:{
 				// Kelar + tinggal detect kalo many sols / no sols
-				System.out.println("Gauss");
 				M.toReducedEchelon();
 				if(M.isNoSol()){
 					System.out.println("SPL tidak memiliki solusi!");
 					break;
 				}
-
-				for(int i=1; i<M.NeffKol; i++){
-					System.out.println("x" + i + " = " + M.SolveSPLgauss(i));
+				else{
+					String hasil = "";
+					for(int i=1; i<M.NeffKol; i++){
+						hasil += ("x" + i + " = " + M.SolveSPLgauss(i));
+					}
+					MintaOutput(hasil);
 				}
+
+				
 			    break;
 			}
 			case 2:{
 				// tinggal
+				String hasil = "";
 				M.toReducedEchelon();
 				if(M.isNoSol()){
 					System.out.println("SPL tidak memiliki solusi!");
 					break;
 				}
-				System.out.println("Gauss-Jordan");
+				else{
+					for(int i=1; i<M.NeffKol; i++){
+						hasil += ("x" + i + " = " + M.SolveSPLgJordan(i));
+					}
+					MintaOutput(hasil);
+				}
 			    break;
 			}
 			case 3:{
@@ -138,24 +141,25 @@ class DriverMatriks{
 					System.out.println("Matriks harus Augmented dan Square!");			
 				}
 				else{
-					Matriks hasil = new Matriks();
-					M.unAugmented(hasil, 1);
-					hasil = hasil.KaliMat(M.InverseAdjoin());
-					for(int i=1; i<=hasil.NeffBar; i++){
-						System.out.println("x" + i + " = " + hasil.angka[i][1]);
+					String hasil = "";
+					for(int i=1; i<=M.NeffBar; i++){
+						hasil += ("x" + i + " = " + M.SolveSPLinverse(i));
 					}
+					MintaOutput(hasil);
 				}		
 			    break;
 			}
 			case 4:{
 				// CRAMER
+				String hasil = "";
 				if(M.NeffKol != M.NeffBar+1){
 					System.out.println("Matriks harus Augmented dan Square!");			
 				}
 				else{
 					for(int i=1; i<=M.NeffBar; i++){
-						System.out.println("x" + i + " = " + M.SolveSPLKramer(i));
+						hasil += ("x" + i + " = " + M.SolveSPLKramer(i));
 					}
+					MintaOutput(hasil);
 				}
 			    break;
 			}
@@ -223,8 +227,7 @@ class DriverMatriks{
 				if(M.NeffKol == M.NeffBar){
 					if(M.IsInvertible()){
 						M.InverseOBE();
-						System.out.println("Inversenya:");
-						M.OutputDataMat();
+						MintaOutput(M.OutputDataMat());
 					}
 					else{
 						System.out.println("Matriks tidak bisa di Inverse!");
@@ -240,7 +243,7 @@ class DriverMatriks{
 				if(M.NeffKol == M.NeffBar){
 					if(M.IsInvertible()){
 						System.out.println("Inversenya:");
-						M.InverseAdjoin().OutputDataMat();
+						MintaOutput(M.InverseAdjoin().OutputDataMat());
 					}
 					else{
 						System.out.println("Matriks tidak bisa di Inverse!");
@@ -275,9 +278,49 @@ class DriverMatriks{
 			case 2:{
 				// belom
 				in.nextLine();
-				fileName = in.nextLine();
-				System.out.println("Nama File:");
+
+				do {
+					System.out.println("Nama File:");
+					fileName = in.nextLine();
+					if(!FileCheck(fileName)){
+						System.out.println("File tidak ada.");
+					}
+				} while(!FileCheck(fileName));
+
 				M.InputDataMatFile(fileName);
+			    break;
+			}
+			default:{
+				System.out.println("N/A");
+			}
+		}
+	}
+
+	public static void MintaOutput(String out){
+		int choice;
+
+		Scanner in = new Scanner(System.in);
+		String fileName;
+		System.out.println("Pilih metode output:");
+		System.out.println("1. Output ke Layar");
+		System.out.println("2. Output ke File");
+
+		choice = in.nextInt();
+		switch(choice){
+			case 1:{
+				System.out.println(out);
+			    break;
+			}
+			case 2:{
+				// belom
+				in.nextLine();
+				System.out.println("Nama File:");
+				fileName = in.nextLine();
+				try(BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName))) {
+		            bufferedWriter.write(out);
+		        } catch (IOException e) {
+		            System.out.println("error");
+		        }
 			    break;
 			}
 			default:{
@@ -324,8 +367,15 @@ class DriverMatriks{
 			}
 			case 2:{
 				in.nextLine();
-				System.out.println("Nama File:");
-				fileName = in.nextLine();
+
+				do {
+					System.out.println("Nama File:");
+					fileName = in.nextLine();
+					if(!FileCheck(fileName)){
+						System.out.println("File tidak ada.");
+					}
+				} while(!FileCheck(fileName));
+				
 				X.InputDataMatFile(fileName);
 				if(X.NeffKol != 2){
 					System.out.println("Mohon masukkan sebagai pasangan x-y!");
@@ -360,31 +410,40 @@ class DriverMatriks{
 		M.unAugmented(Y, 1);
 
 		// PRINT FUNGSI
+		String hasil = "";
+		boolean firstPrinted = false;
+
 		for(int i=Y.NeffBar; i>=1; i--){
 
-			if(i==1){
-				System.out.print(Math.abs(Y.angka[i][1]));
-			}
-			else if(i==2){
-				System.out.print(Math.abs(Y.angka[i][1]) + "x");
-			}
-			else {
-				System.out.print(Math.abs(Y.angka[i][1]) + "x^" + (i-1));
-			}
-
-			if(i!=1){
-				if(Y.angka[i+1][1]>=0){
-					System.out.print(" + ");
+			if(Y.angka[i][1] != 0){
+				if(!firstPrinted){
+					hasil += Y.angka[i][1];
+					firstPrinted = true;
 				}
 				else{
-					System.out.print(" - ");
+					hasil += Math.abs(Y.angka[i][1]);
 				}
-				
+
+				if(i==2){
+					hasil += "x";
+				}
+				else if(i>2){
+					hasil += "x^" + (i-1);
+				}
+
+				if(firstPrinted && i != 1){
+					if(Y.angka[i+1][1]>=0){
+						hasil += (" + ");
+					}
+					else{
+						hasil += (" - ");
+					}
+				}
 			}
-			else{
-				System.out.print("\n");
-			}
+			
 		}
+
+		MintaOutput(hasil);
 
 		// taksir nilai x
 		Scanner in = new Scanner(System.in);
@@ -398,5 +457,9 @@ class DriverMatriks{
 		System.out.println("Taksiran nilai Y: " +  taksirY);
 	}
 
+	public static boolean FileCheck(String fileName){
+		File tmpDir = new File(fileName);
+		return tmpDir.exists() && tmpDir.isFile();
+	}
 
 }
