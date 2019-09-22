@@ -416,6 +416,15 @@ class DriverMatriks{
 		for(int i=Y.NeffBar; i>=1; i--){
 
 			if(Y.angka[i][1] != 0){
+				if(firstPrinted && Y.angka[i][1]!=0){
+					if(Y.angka[i][1]>=0){
+						hasil += (" + ");
+					}
+					else{
+						hasil += (" - ");
+					}
+				}
+
 				if(!firstPrinted){
 					hasil += Y.angka[i][1];
 					firstPrinted = true;
@@ -429,15 +438,6 @@ class DriverMatriks{
 				}
 				else if(i>2){
 					hasil += "x^" + (i-1);
-				}
-
-				if(firstPrinted && i != 1){
-					if(Y.angka[i+1][1]>=0){
-						hasil += (" + ");
-					}
-					else{
-						hasil += (" - ");
-					}
 				}
 			}
 			
