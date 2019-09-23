@@ -576,42 +576,60 @@ class Matriks{
     
     String SolveSPLgauss(int valNum){
         // prekondisi: ada solusi
-        BigDecimal sum = BigDecimal.ZERO;
-        String[] arrayVal = new String[this.NeffKol];
+        BigDecimal[] sum = new BigDecimal[this.NeffKol+1];
         int start = this.NeffKol-1;
-        int search = 1;
+        int search = this.NeffBar;
         Matriks testFree = new Matriks();
         String solution = "";
+        String simbol;
+        BigDecimal temp;
         
         this.CopyMatriks(testFree);
         this.toEchelon();
         testFree.toReducedEchelon();
+        if (testFree.isFreeVar(valNum)) {
+            return "s" + Integer.toString(valNum);
+        }
 
-        for (int i = start; i >= valNum; i--){
-            //search index 1 di baris ke berapa
-            while (search <= this.NeffBar && this.angka[search][i].setScale(10, RoundingMode.HALF_EVEN).compareTo(BigDecimal.ONE) != 0){
-                search++;
+        while (search >= 1 && this.angka[search][valNum].setScale(10, RoundingMode.HALF_EVEN).compareTo(BigDecimal.ONE) != 0){
+            search--;
+        }
+        for (int i = 1; i <= this.NeffKol; i++) {
+            sum[i] = this.angka[search][i];
+        }
+        for (int i = this.NeffBar; i > search; i--) {
+            int j = 1;
+            while (j <= this.NeffKol && this.angka[search][j].setScale(10, RoundingMode.HALF_EVEN).compareTo(BigDecimal.ONE) == 0){
+                j++;
             }
-
-            //operasikan di baris tersebut
-            for (int j = i+1; j < this.NeffKol; j++){
-                if(!testFree.isFreeVar(j)){
-                    sum = sum.add(this.angka[search][j]);
+            if (j <= this.NeffKol) {
+                temp = sum[j];
+                for (int k = 1; k <= this.NeffKol; k++) {
+                    if (this.angka[i][k].setScale(10, RoundingMode.HALF_EVEN).compareTo(BigDecimal.ZERO) != 0) {
+                        sum[k] = sum[k].subtract(this.angka[i][k].multiply(temp));
+                    }
                 }
             }
-            arrayVal[i] = String.format("%.2f", this.angka[search][this.NeffKol].subtract(sum));
-            if (testFree.isFreeVar(i)) {
-                arrayVal[i] += "FREE";
+        }
+        sum[valNum] = sum[this.NeffKol];
+        for (int i = valNum; i <= this.NeffKol-1; i++) {
+            if (sum[i].setScale(10, RoundingMode.HALF_EVEN).compareTo(BigDecimal.ZERO) != 0) {
+                if (i != valNum) {
+                    sum[i] = sum[i].negate();
+                    simbol = "s" + Integer.toString(i);
+                } else {
+                    simbol = "";
+                }
+                if (sum[i].compareTo(BigDecimal.ZERO) > 0 && solution != "") {
+                    solution += "+ ";
+                } 
+                else if (sum[i].setScale(10, RoundingMode.HALF_EVEN).compareTo(BigDecimal.ZERO) < 0){ 
+                    solution += "- "; 
+                }
+                solution +=  sum[i].setScale(3, RoundingMode.HALF_EVEN).abs() + simbol + " ";
             }
-            sum = BigDecimal.ZERO;
-            search = 1;
         }
-
-        solution += arrayVal[1];
-        for (int i = 1; i <= this.NeffKol-1; i++) {
-            System.out.println(arrayVal[i]);
-        }
-        return arrayVal[valNum];
+        return solution;
     }
 
     BigDecimal SolveSPLinverse(int valNum){
