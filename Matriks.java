@@ -95,7 +95,7 @@ class Matriks{
         String hasil = "";
 		for(int i=1; i<=this.NeffBar; i++){
             for(int j=1; j<=this.NeffKol; j++){
-                hasil += this.angka[i][j].setScale(2, RoundingMode.HALF_EVEN);
+                hasil += this.angka[i][j].setScale(3, RoundingMode.HALF_EVEN);
                 // hasil += String.format("%.5f", this.angka[i][j].doubleValue());
                 // if(this.angka[i][j].setScale(10, RoundingMode.HALF_EVEN).compareTo(BigDecimal.ZERO) == 0){
                 //     hasil += " ZERO ";
@@ -565,7 +565,7 @@ class Matriks{
                     else if (temp.setScale(10, RoundingMode.HALF_EVEN).compareTo(BigDecimal.ZERO) < 0){ 
                         solution += "- "; 
                     }
-                    solution += String.format("%.2f", temp.doubleValue()) + simbol + " ";
+                    solution +=  temp.setScale(3, RoundingMode.HALF_EVEN).abs() + simbol + " ";
                 }
             }
         } else {
