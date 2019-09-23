@@ -1,11 +1,15 @@
 import java.util.*;
 import java.lang.Math; 
 import java.io.*;
+import java.math.*;
 
 class DriverMatriks{
 	public static void main(String[] args){
 		Matriks M1 = new Matriks();
+		// M1.InputDataMat();
+		// M1.KaliKons(new BigDecimal("7"));
 		MainMenu(M1);
+		// System.out.println(M1.OutputDataMat());
 	}
 
 	public static void PrintMenu(){
@@ -367,8 +371,8 @@ class DriverMatriks{
 						}
 
 						found = false;
-						for(int j=1; j<=i; j++){
-							if(X.angka[j][1] == Float.parseFloat(baris[0]) && Y.angka[j][1] != Float.parseFloat(baris[1])){
+						for(int j=1; j<i; j++){
+							if(X.angka[j][1].compareTo(new BigDecimal(baris[0])) == 0 && Y.angka[j][1].compareTo(new BigDecimal(baris[1])) != 0){
 								found = true;
 								break;
 							}
@@ -381,10 +385,8 @@ class DriverMatriks{
 						valid = true;
 					}
 
-					
-
-					X.angka[i][1] =  Float.parseFloat(baris[0]);
-					Y.angka[i][1] =  Float.parseFloat(baris[1]);
+					X.angka[i][1] =  new BigDecimal(baris[0]);
+					Y.angka[i][1] =  new BigDecimal(baris[1]);
 				}
 			    break;
 			}
@@ -411,7 +413,7 @@ class DriverMatriks{
 					found = false;
 					for(int i=1; i<=X.NeffBar; i++){
 						for(int j=1; j<i; j++){
-							if(X.angka[i][1] == X.angka[j][1] && Y.angka[i][1] != Y.angka[j][1]){
+							if(X.angka[i][1].compareTo(X.angka[j][1]) == 0 && Y.angka[i][1].compareTo(Y.angka[j][1]) != 0){
 								found = true;
 								break;
 							}
@@ -444,11 +446,14 @@ class DriverMatriks{
 		M.NeffKol = X.NeffBar;
 		for(int i=1; i<=M.NeffBar; i++){
 			for(int j=1; j<=M.NeffKol; j++){
-				M.angka[i][j] = (float)Math.pow(X.angka[i][1], j-1);
+				M.angka[i][j] = X.angka[i][1].pow(j-1);
 			}
 		}
 		M.Augmented(Y);
+
 		M.toReducedEchelon();
+
+
 		M.unAugmented(Y, 1);
 
 		// PRINT FUNGSI
@@ -457,9 +462,9 @@ class DriverMatriks{
 
 		for(int i=Y.NeffBar; i>=1; i--){
 
-			if(Y.angka[i][1] != 0){
-				if(firstPrinted && Y.angka[i][1]!=0){
-					if(Y.angka[i][1]>=0){
+			if(Y.angka[i][1].setScale(10, RoundingMode.HALF_EVEN).compareTo(BigDecimal.ZERO) != 0){
+				if(firstPrinted && Y.angka[i][1].setScale(10, RoundingMode.HALF_EVEN).compareTo(BigDecimal.ZERO)!=0){
+					if(Y.angka[i][1].setScale(10, RoundingMode.HALF_EVEN).compareTo(BigDecimal.ZERO) >= 0){
 						hasil += (" + ");
 					}
 					else{
@@ -468,11 +473,13 @@ class DriverMatriks{
 				}
 
 				if(!firstPrinted){
-					hasil += Y.angka[i][1];
+					hasil += Y.angka[i][1].setScale(5, RoundingMode.HALF_EVEN);
+					// hasil += String.format("%.2f", Y.angka[i][1]);
 					firstPrinted = true;
 				}
 				else{
-					hasil += Math.abs(Y.angka[i][1]);
+					hasil +=  Y.angka[i][1].abs().setScale(5, RoundingMode.HALF_EVEN);
+					// hasil +=  String.format("%.2f", Y.angka[i][1].abs());
 				}
 
 				if(i==2){
@@ -490,19 +497,19 @@ class DriverMatriks{
 		// taksir nilai x
 		Scanner in = new Scanner(System.in);
 		int n;
-		float taksirX;
-		float taksirY;
+		BigDecimal taksirX = BigDecimal.ZERO;
+		BigDecimal taksirY = BigDecimal.ZERO;
 		System.out.println("Jumlah nilai X yang mau ditaksir:");
 		n = in.nextInt();
 
 		for(int j=1; j<=n; j++){
 			System.out.print("Masukkan nilai X yang akan ditaksir: ");
-			taksirX = in.nextFloat();
-			taksirY=0;
+			taksirX = new BigDecimal(Double.toString(in.nextDouble()));
+			taksirY = BigDecimal.ZERO;
 			for(int i=1; i<=M.NeffBar; i++){
-				taksirY += Y.angka[i][1] * (float)Math.pow(taksirX, i-1);
+				taksirY = taksirY.add(Y.angka[i][1].multiply(taksirX.pow(i-1)));
 			}
-			System.out.println("Taksiran nilai Y: " +  taksirY);
+			System.out.println("Taksiran nilai Y: " +  taksirY.setScale(5, RoundingMode.HALF_EVEN));
 		}
 	}
 
