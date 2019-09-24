@@ -6,10 +6,7 @@ import java.math.*;
 class DriverMatriks{
 	public static void main(String[] args){
 		Matriks M1 = new Matriks();
-		// M1.InputDataMat();
-		// M1.KaliKons(new BigDecimal("7"));
 		MainMenu(M1);
-		// System.out.println(M1.OutputDataMat());
 	}
 
 	public static void PrintMenu(){
@@ -37,7 +34,6 @@ class DriverMatriks{
 			choice = in.nextInt();
 			switch(choice){
 				case 1:{
-					// belum implementasi gauss-gJordan
 					SPLMenu(M);
 				    break;
 				}
@@ -50,7 +46,6 @@ class DriverMatriks{
 				    break;
 				}
 				case 4:{
-					// DONE
 					MintaInput(M);
 					if(M.NeffKol != M.NeffBar){
 						System.out.println("Matriks harus Square!");
@@ -61,7 +56,6 @@ class DriverMatriks{
 				    break;
 				}
 				case 5:{
-					// DONE
 					MintaInput(M);
 					if(M.NeffKol != M.NeffBar){
 						System.out.println("Matriks harus Square!");
@@ -72,7 +66,6 @@ class DriverMatriks{
 				    break;
 				}
 				case 6:{
-					// !
 					Interpolasi();
 				    break;
 				}
@@ -106,7 +99,7 @@ class DriverMatriks{
 		System.out.println();
 		switch(choice){
 			case 1:{
-				// Kelar + tinggal detect kalo many sols / no sols
+				// GAUSS
 				M.toReducedEchelon();
 				if(M.isNoSol()){
 					System.out.println("SPL tidak memiliki solusi!");
@@ -124,7 +117,7 @@ class DriverMatriks{
 			    break;
 			}
 			case 2:{
-				// tinggal
+				// GAUSS-JORDAN
 				String hasil = "";
 				M.toReducedEchelon();
 				if(M.isNoSol()){
@@ -474,12 +467,10 @@ class DriverMatriks{
 
 				if(!firstPrinted){
 					hasil += Y.angka[i][1].setScale(3, RoundingMode.HALF_EVEN);
-					// hasil += String.format("%.2f", Y.angka[i][1]);
 					firstPrinted = true;
 				}
 				else{
 					hasil +=  Y.angka[i][1].abs().setScale(3, RoundingMode.HALF_EVEN);
-					// hasil +=  String.format("%.2f", Y.angka[i][1].abs());
 				}
 
 				if(i==2){

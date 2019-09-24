@@ -96,14 +96,6 @@ class Matriks{
 		for(int i=1; i<=this.NeffBar; i++){
             for(int j=1; j<=this.NeffKol; j++){
                 hasil += this.angka[i][j].setScale(3, RoundingMode.HALF_EVEN);
-                // hasil += String.format("%.5f", this.angka[i][j].doubleValue());
-                // if(this.angka[i][j].setScale(10, RoundingMode.HALF_EVEN).compareTo(BigDecimal.ZERO) == 0){
-                //     hasil += " ZERO ";
-                // }
-                // if(this.angka[i][j].setScale(10, RoundingMode.HALF_EVEN).compareTo(BigDecimal.ONE) == 0){
-                //     hasil += " ONE ";
-                // }
-
                 if(j!=this.NeffKol){
                     hasil += " ";
                 }
@@ -115,26 +107,6 @@ class Matriks{
         return hasil;
 	}
 
-    // void OutputDataMatFile(String fileName){
-    //     try(BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName))) {
-    //         for(int i=1; i<=this.NeffBar; i++){
-    //             for(int j=1; j<=this.NeffKol; j++){
-    //                 bufferedWriter.write(String.format("%.2f", this.angka[i][j]));
-    //                 if(j!=this.NeffKol){
-    //                     bufferedWriter.write(" ");
-    //                 }
-    //             }
-    //             if(i!=this.NeffBar){
-    //                 bufferedWriter.write("\n");
-    //             }
-    //         }
-            
-    //     } catch (IOException e) {
-    //         System.out.println("error");
-    //     }
-
-    // }
-
 	void OBESwap(int a, int b){
 		// swap baris ke a dan b
 		BigDecimal temp = BigDecimal.ZERO;
@@ -144,8 +116,6 @@ class Matriks{
 			this.angka[a][i] = this.angka[b][i];
 			this.angka[b][i] = temp;
 		}
-		// DEBUG: NANTI DIBUANG AJA
-		//System.out.println("R" + a + " <-> R" + b);
 	}
 
 	void OBEScale(int a, BigDecimal k){
@@ -156,8 +126,6 @@ class Matriks{
                 this.angka[a][i] = this.angka[a][i].multiply(k);
             }
 		}
-		// DEBUG: NANTI DIBUANG AJA
-		//System.out.println("R" + a + " <- R" + a + "*" + k);
 	}
 
 	void OBEReplace(int a, int b, BigDecimal k){
@@ -166,9 +134,7 @@ class Matriks{
             if (this.angka[b][i].setScale(10, RoundingMode.HALF_EVEN).compareTo(BigDecimal.ZERO) != 0) {
 	    		this.angka[a][i] = this.angka[a][i].add(this.angka[b][i].multiply(k));
             }
-		}
-		// DEBUG: NANTI DIBUANG AJA
-        // System.out.println("R" + a + " <- R" + a + " + R" + b + "*" + k);		
+		}	
 	}
 
     void KaliKons(BigDecimal k){
@@ -327,7 +293,6 @@ class Matriks{
         // mengubah matriks menjadi bentuk reduced echelon
         boolean found;
         this.toEchelon();
-        // System.out.println(this.OutputDataMat() + "\n");
         for (int i = this.NeffBar; i >= 1; i--) {
             found = false;
             int j = 1;
@@ -342,26 +307,6 @@ class Matriks{
                 }
             }
         }
-    }
-
-    int CountPivot(int B, int K) {
-        // menghitung jumlah pivot point
-        // matriks sudah berbentuk echelon
-        // 
-        boolean found;
-        int count = 0;
-        for (int i = B; i >= 1; i--) {
-            found = false;
-            int j = 1;
-            while (!found && j <= K) {
-                found = this.angka[i][j].setScale(10, RoundingMode.HALF_EVEN).compareTo(BigDecimal.ZERO) != 0;
-                j++;
-            }
-            if (found) {
-                count++;
-            }
-        }
-        return count;
     }
 
     BigDecimal DeterminanOBE() {
@@ -424,9 +369,6 @@ class Matriks{
         Matriks holder = new Matriks();
         holder.NeffBar = this.NeffBar-1;
         holder.NeffKol = this.NeffKol-1;
-        // if(this.NeffBar == 2){ // BASIS saat 2x2
-        //     return this.angka[1][1] * this.angka[2][2] - this.angka[1][2] * this.angka[2][1];
-        // }
         if(this.NeffBar == 1){ // BASIS saat 2x2
             return this.angka[1][1];
         }
