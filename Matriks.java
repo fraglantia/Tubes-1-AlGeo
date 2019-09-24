@@ -542,15 +542,15 @@ class Matriks{
 
     String SolveSPLgJordan(int valNum){
         // prekondisi: ada solusi
-        int search = 1;
+        int search = this.NeffBar;
         String solution = "";
         String simbol;
         BigDecimal temp;
         this.toReducedEchelon();
-        while (search <= this.NeffBar && this.angka[search][valNum].setScale(10, RoundingMode.HALF_EVEN).compareTo(BigDecimal.ONE) != 0){
-            search++;
+        while (search >= 1 && this.angka[search][valNum].setScale(10, RoundingMode.HALF_EVEN).compareTo(BigDecimal.ONE) != 0){
+            search--;
         }
-        if (search <= this.NeffBar) {
+        if (search >= 1) {
             for (int i = this.NeffKol; i > valNum; i--) {
                 temp = this.angka[search][i];
                 simbol = "";
@@ -594,12 +594,13 @@ class Matriks{
         while (search >= 1 && this.angka[search][valNum].setScale(10, RoundingMode.HALF_EVEN).compareTo(BigDecimal.ONE) != 0){
             search--;
         }
+        
         for (int i = 1; i <= this.NeffKol; i++) {
             sum[i] = this.angka[search][i];
         }
         for (int i = this.NeffBar; i > search; i--) {
             int j = 1;
-            while (j <= this.NeffKol && this.angka[search][j].setScale(10, RoundingMode.HALF_EVEN).compareTo(BigDecimal.ONE) == 0){
+            while (j <= this.NeffKol && this.angka[i][j].setScale(10, RoundingMode.HALF_EVEN).compareTo(BigDecimal.ONE) != 0){
                 j++;
             }
             if (j <= this.NeffKol) {
