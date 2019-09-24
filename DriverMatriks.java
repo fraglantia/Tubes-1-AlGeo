@@ -193,7 +193,7 @@ class DriverMatriks{
 					System.out.println("Matriks harus Square!");			
 				}
 				else{
-					System.out.println("Determinannya: " + M.DeterminanOBE());
+					System.out.println("Determinannya: " + M.DeterminanOBE().setScale(3, RoundingMode.HALF_EVEN));
 				}
 			    break;
 			}
@@ -203,7 +203,7 @@ class DriverMatriks{
 					System.out.println("Matriks harus Square!");			
 				}
 				else{
-					System.out.println("Determinannya: " + M.DeterminanKofaktor());
+					System.out.println("Determinannya: " + M.DeterminanKofaktor().setScale(3, RoundingMode.HALF_EVEN));
 				}
 			    break;
 			}
@@ -473,12 +473,12 @@ class DriverMatriks{
 				}
 
 				if(!firstPrinted){
-					hasil += Y.angka[i][1].setScale(5, RoundingMode.HALF_EVEN);
+					hasil += Y.angka[i][1].setScale(3, RoundingMode.HALF_EVEN);
 					// hasil += String.format("%.2f", Y.angka[i][1]);
 					firstPrinted = true;
 				}
 				else{
-					hasil +=  Y.angka[i][1].abs().setScale(5, RoundingMode.HALF_EVEN);
+					hasil +=  Y.angka[i][1].abs().setScale(3, RoundingMode.HALF_EVEN);
 					// hasil +=  String.format("%.2f", Y.angka[i][1].abs());
 				}
 
@@ -509,7 +509,7 @@ class DriverMatriks{
 			for(int i=1; i<=M.NeffBar; i++){
 				taksirY = taksirY.add(Y.angka[i][1].multiply(taksirX.pow(i-1)));
 			}
-			System.out.println("Taksiran nilai Y: " +  taksirY.setScale(5, RoundingMode.HALF_EVEN));
+			System.out.println("Taksiran nilai Y: " +  taksirY.setScale(3, RoundingMode.HALF_EVEN));
 		}
 	}
 
