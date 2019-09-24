@@ -467,14 +467,33 @@ class Matriks{
         return false;
     }
 
+    boolean isNoSol2(){
+        Matriks b = new Matriks();
+        Matriks temp = new Matriks();
+        this.unAugmented(b, 1);
+        this.CopyMatriks(temp);
+        this.Augmented(b);
+        return temp.DeterminanOBE().compareTo(BigDecimal.ZERO) == 0;
+    }
+
     boolean isFreeVar(int valNum){
     // Matriks yg dioperasikan harus sudah dalam bentuk reducedEchelon
         BigDecimal sum = BigDecimal.ZERO;
         for (int i = 1; i <= this.NeffBar; i++){
-            sum = sum.add(this.angka[i][valNum]);
+            sum = sum.add(this.angka[i][valNum].abs());
         }
         if (sum.setScale(10, RoundingMode.HALF_EVEN).compareTo(BigDecimal.ONE) != 0){
-            return true;
+            sum = BigDecimal.ZERO;
+            int search = this.NeffBar;
+            while (search >= 1 && this.angka[search][valNum].setScale(10, RoundingMode.HALF_EVEN).compareTo(BigDecimal.ONE) != 0){
+                search--;
+            }
+            if (search >= 1) {
+                for (int i = 1; i <= valNum; i++){
+                    sum = sum.add(this.angka[search][i].abs());
+                }
+            }
+            return sum.setScale(10, RoundingMode.HALF_EVEN).compareTo(BigDecimal.ONE) != 0;
         } else {
             return false;
         }
@@ -580,7 +599,7 @@ class Matriks{
         Matriks clone = new Matriks();
         this.CopyMatriks(clone);
         clone.unAugmented(hasil, 1);
-        hasil = hasil.KaliMat(clone.InverseAdjoin());
+        hasil = clone.InverseAdjoin().KaliMat(hasil);
         return hasil.angka[valNum][1];
     }
 

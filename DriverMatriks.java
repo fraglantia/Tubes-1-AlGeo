@@ -103,7 +103,6 @@ class DriverMatriks{
 				M.toReducedEchelon();
 				if(M.isNoSol()){
 					System.out.println("SPL tidak memiliki solusi!");
-					break;
 				} 
 				else{
 					String hasil = "";
@@ -121,8 +120,7 @@ class DriverMatriks{
 				String hasil = "";
 				M.toReducedEchelon();
 				if(M.isNoSol()){
-					System.out.println("SPL tidak memiliki solusi!");
-					break;
+					System.out.println("SPL tidak memiliki solusi/banyak solusi!");
 				}
 				else{
 					for(int i=1; i<M.NeffKol; i++){
@@ -137,7 +135,9 @@ class DriverMatriks{
 				if(M.NeffKol != M.NeffBar+1){
 					System.out.println("Matriks harus Augmented dan Square!");			
 				}
-				else{
+				else if(M.isNoSol2()){
+					System.out.println("SPL tidak memiliki solusi/banyak solusi!");
+				} else {
 					String hasil = "";
 					for(int i=1; i<=M.NeffBar; i++){
 						hasil += ("x" + i + " = " + M.SolveSPLinverse(i));
@@ -152,6 +152,9 @@ class DriverMatriks{
 				if(M.NeffKol != M.NeffBar+1){
 					System.out.println("Matriks harus Augmented dan Square!");			
 				}
+				else if(M.isNoSol2()){
+					System.out.println("SPL tidak memiliki solusi!");
+				} 
 				else{
 					for(int i=1; i<=M.NeffBar; i++){
 						hasil += ("x" + i + " = " + M.SolveSPLKramer(i));
