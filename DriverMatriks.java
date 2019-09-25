@@ -120,7 +120,7 @@ class DriverMatriks{
 				String hasil = "";
 				M.toReducedEchelon();
 				if(M.isNoSol()){
-					System.out.println("SPL tidak memiliki solusi/banyak solusi!");
+					System.out.println("SPL tidak memiliki solusi!");
 				}
 				else{
 					for(int i=1; i<M.NeffKol; i++){
@@ -153,7 +153,7 @@ class DriverMatriks{
 					System.out.println("Matriks harus Augmented dan Square!");			
 				}
 				else if(M.isNoSol2()){
-					System.out.println("SPL tidak memiliki solusi!");
+					System.out.println("SPL tidak memiliki/banyak solusi!");
 				} 
 				else{
 					for(int i=1; i<=M.NeffBar; i++){
@@ -458,9 +458,9 @@ class DriverMatriks{
 
 		for(int i=Y.NeffBar; i>=1; i--){
 
-			if(Y.angka[i][1].setScale(10, RoundingMode.HALF_EVEN).compareTo(BigDecimal.ZERO) != 0){
-				if(firstPrinted && Y.angka[i][1].setScale(10, RoundingMode.HALF_EVEN).compareTo(BigDecimal.ZERO)!=0){
-					if(Y.angka[i][1].setScale(10, RoundingMode.HALF_EVEN).compareTo(BigDecimal.ZERO) >= 0){
+			if(Y.angka[i][1].setScale(20, RoundingMode.HALF_EVEN).compareTo(BigDecimal.ZERO) != 0){
+				if(firstPrinted && Y.angka[i][1].setScale(20, RoundingMode.HALF_EVEN).compareTo(BigDecimal.ZERO)!=0){
+					if(Y.angka[i][1].setScale(20, RoundingMode.HALF_EVEN).compareTo(BigDecimal.ZERO) >= 0){
 						hasil += (" + ");
 					}
 					else{
