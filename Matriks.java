@@ -530,6 +530,9 @@ class Matriks{
         } else {
             solution += "s" + Integer.toString(valNum);
         }
+        if (solution == "") {
+            solution += BigDecimal.ZERO.setScale(3, RoundingMode.HALF_EVEN);
+        }
         return solution;
     }
     
@@ -588,6 +591,9 @@ class Matriks{
                 }
                 solution +=  sum[i].setScale(3, RoundingMode.HALF_EVEN).abs() + simbol + " ";
             }
+        }
+        if (solution == "") {
+            solution += BigDecimal.ZERO.setScale(3, RoundingMode.HALF_EVEN);
         }
         return solution;
     }
