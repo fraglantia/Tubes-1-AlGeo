@@ -40,7 +40,7 @@ class Matriks{
 		}
 	}
 
-    void InputDataMatFile(String fileName){
+    int InputDataMatFile(String fileName){
         BufferedReader reader;
 
         Matriks M = new Matriks();
@@ -84,9 +84,12 @@ class Matriks{
 
         if(sameLength){
             this.ReverseCopyMatriks(M);
+            return 0;
+            // successful
         }
         else {
-            System.out.println("Ukuran matriks tidak seragam");
+            return -1;
+            // unsuccessful
         }
         
     }

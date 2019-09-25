@@ -276,18 +276,27 @@ class DriverMatriks{
 			    break;
 			}
 			case 2:{
-				// belom
+				boolean valid = false;
 				in.nextLine();
 
-				do {
-					System.out.println("Nama File:");
-					fileName = in.nextLine();
-					if(!FileCheck(fileName)){
-						System.out.println("File tidak ada.");
-					}
-				} while(!FileCheck(fileName));
+				while(!valid){
+					do {
+						System.out.println("Nama File:");
+						fileName = in.nextLine();
+						if(!FileCheck(fileName)){
+							System.out.println("File tidak ada.");
+						}
+					} while(!FileCheck(fileName));
 
-				M.InputDataMatFile(fileName);
+					if(M.InputDataMatFile(fileName)==0){
+						 valid = true;
+					}
+					else{
+						System.out.println("Ukuran matriks tidak seragam");
+					}
+				}
+				
+
 			    break;
 			}
 			default:{
