@@ -479,24 +479,22 @@ class Matriks{
     boolean isFreeVar(int valNum){
     // Matriks yg dioperasikan harus sudah dalam bentuk reducedEchelon
         BigDecimal sum = BigDecimal.ZERO;
+        BigDecimal temp;
         for (int i = 1; i <= this.NeffBar; i++){
             sum = sum.add(this.angka[i][valNum].abs());
         }
-        if (sum.setScale(10, RoundingMode.HALF_EVEN).compareTo(BigDecimal.ONE) != 0){
-            sum = BigDecimal.ZERO;
-            int search = this.NeffBar;
-            while (search >= 1 && this.angka[search][valNum].setScale(10, RoundingMode.HALF_EVEN).compareTo(BigDecimal.ONE) != 0){
-                search--;
-            }
-            if (search >= 1) {
-                for (int i = 1; i <= valNum; i++){
-                    sum = sum.add(this.angka[search][i].abs());
-                }
-            }
-            return sum.setScale(10, RoundingMode.HALF_EVEN).compareTo(BigDecimal.ONE) != 0;
-        } else {
-            return false;
+        temp = sum;
+        sum = BigDecimal.ZERO;
+        int search = this.NeffBar;
+        while (search >= 1 && this.angka[search][valNum].setScale(10, RoundingMode.HALF_EVEN).compareTo(BigDecimal.ONE) != 0){
+            search--;
         }
+        if (search >= 1) {
+            for (int i = 1; i <= valNum; i++){
+                sum = sum.add(this.angka[search][i].abs());
+            }
+        }
+        return (temp.setScale(10, RoundingMode.HALF_EVEN).compareTo(BigDecimal.ONE) != 0 || sum.setScale(10, RoundingMode.HALF_EVEN).compareTo(BigDecimal.ONE) != 0);
     }
 
 
@@ -555,7 +553,7 @@ class Matriks{
         while (search >= 1 && this.angka[search][valNum].setScale(10, RoundingMode.HALF_EVEN).compareTo(BigDecimal.ONE) != 0){
             search--;
         }
-        
+
         for (int i = 1; i <= this.NeffKol; i++) {
             sum[i] = this.angka[search][i];
         }
@@ -567,7 +565,7 @@ class Matriks{
             if (j <= this.NeffKol) {
                 temp = sum[j];
                 for (int k = 1; k <= this.NeffKol; k++) {
-                    if (this.angka[i][k].setScale(10, RoundingMode.HALF_EVEN).compareTo(BigDecimal.ZERO) != 0) {
+                    if (this.angka[i][k] != null && this.angka[i][k].setScale(10, RoundingMode.HALF_EVEN).compareTo(BigDecimal.ZERO) != 0) {
                         sum[k] = sum[k].subtract(this.angka[i][k].multiply(temp));
                     }
                 }
@@ -575,7 +573,7 @@ class Matriks{
         }
         sum[valNum] = sum[this.NeffKol];
         for (int i = valNum; i <= this.NeffKol-1; i++) {
-            if (sum[i].setScale(10, RoundingMode.HALF_EVEN).compareTo(BigDecimal.ZERO) != 0) {
+            if (sum[i] != null && sum[i].setScale(10, RoundingMode.HALF_EVEN).compareTo(BigDecimal.ZERO) != 0) {
                 if (i != valNum) {
                     sum[i] = sum[i].negate();
                     simbol = "s" + Integer.toString(i);

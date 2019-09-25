@@ -140,7 +140,7 @@ class DriverMatriks{
 				} else {
 					String hasil = "";
 					for(int i=1; i<=M.NeffBar; i++){
-						hasil += ("x" + i + " = " + M.SolveSPLinverse(i));
+						hasil += ("x" + i + " = " + M.SolveSPLinverse(i).setScale(3, RoundingMode.HALF_EVEN) + "\n");
 					}
 					MintaOutput(hasil);
 				}		
@@ -157,7 +157,7 @@ class DriverMatriks{
 				} 
 				else{
 					for(int i=1; i<=M.NeffBar; i++){
-						hasil += ("x" + i + " = " + M.SolveSPLKramer(i));
+						hasil += ("x" + i + " = " + M.SolveSPLKramer(i).setScale(3, RoundingMode.HALF_EVEN) + "\n");
 					}
 					MintaOutput(hasil);
 				}
