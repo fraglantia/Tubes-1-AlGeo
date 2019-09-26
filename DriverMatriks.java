@@ -268,6 +268,7 @@ class DriverMatriks{
 		System.out.println("\nPilih metode input:");
 		System.out.println("1. Input dari Keyboard");
 		System.out.println("2. Input dari File");
+		System.out.print(">> ");
 
 		choice = in.nextInt();
 		switch(choice){
@@ -281,7 +282,7 @@ class DriverMatriks{
 
 				while(!valid){
 					do {
-						System.out.println("Nama File:");
+						System.out.print("Nama File: ");
 						fileName = in.nextLine();
 						if(!FileCheck(fileName)){
 							System.out.println("File tidak ada.");
@@ -313,6 +314,7 @@ class DriverMatriks{
 		System.out.println("Pilih metode output:");
 		System.out.println("1. Output ke Layar");
 		System.out.println("2. Output ke File");
+		System.out.print(">> ");
 
 		choice = in.nextInt();
 		switch(choice){
@@ -323,7 +325,7 @@ class DriverMatriks{
 			case 2:{
 				// belom
 				in.nextLine();
-				System.out.println("Nama File:");
+				System.out.print("Nama File: ");
 				fileName = in.nextLine();
 				try(BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName))) {
 		            bufferedWriter.write(out);
@@ -402,7 +404,7 @@ class DriverMatriks{
 
 				while(!valid){
 					do {
-						System.out.println("Nama File:");
+						System.out.print("Nama File: ");
 						fileName = in.nextLine();
 						if(!FileCheck(fileName)){
 							System.out.println("File tidak ada.");
