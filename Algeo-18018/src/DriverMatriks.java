@@ -349,6 +349,7 @@ class DriverMatriks{
 		System.out.println("\nPilih metode input:");
 		System.out.println("1. Input dari Keyboard");
 		System.out.println("2. Input dari File");
+		System.out.print(">> ");
 
 		choice = in.nextInt();
 		switch(choice){
